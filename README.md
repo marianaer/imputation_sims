@@ -1,6 +1,6 @@
 # imputation_sims
 
-Converts fsc26 output to plink files (PED and MAP)
+Converts fsc26 output to plink files (PED and MAP) and creates .par file for Eigensoft softwares
 
 Works for simulated DNA seqs in the form of snps (numeric strings).
 Considers individuals to be diploid, so
