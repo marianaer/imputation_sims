@@ -304,37 +304,35 @@ inds_pop2=inds[len(inds)/2:]
 phase_arr=np.zeros((len(geno_usable), nb_ind/3), dtype='object') # Divide by 6 bc we only want to output pop1 and pop2 asdiploid organisms (we have 3 pops)
 
 for i in range(nb_ind/3):
-	for g in range(len(geno_usable)): # Divide by 3 bc we only want to output pop1 and pop2
+    for g in range(len(geno_usable)): # Divide by 3 bc we only want to output pop1 and pop2
 
-		g1_allele= g1[g,i]
-		g2_allele= g2[g,i]
+        g1_allele= g1[g,i]        
+        g2_allele= g2[g,i]
+        ref_alt=np.unique(np.concatenate((g1[g,:], g2[g,:])))
+        if len(ref_alt)<2: #if the site is monomorphic. creo que no pasa, ya quitamos los monomorficos antes # print('0 | 0', np.unique(g1[g,:]))
+            phase_arr[g,i]='0|0'
 
-		if len(np.unique(g1[g,:]))<2: #if the site is monomorphic
-                   # print('0 | 0', np.unique(g1[g,:]))
-			phase_arr[g,i]='0|0'
-
-
-		else:
-			if g1_allele==np.unique(g1[g,:])[0] and g2_allele==np.unique(g1[g,:])[0]: # if they're the same BUT the site is  not monomorphic
+        else:        
+            if g1_allele==ref_alt[0] and g2_allele==ref_alt[0]: # if they're the same BUT the site is  not monomorphic= hom ref
                     #    print('0 | 0', g1_allele, g2_allele)
-				phase_arr[g,i]='0|0'
+                phase_arr[g,i]='0|0'
 
 
-			if g1_allele==np.unique(g1[g,:])[1] and g2_allele==np.unique(g1[g,:])[1]: # if they're the same BUT the site is  not monomorphic
+            elif g1_allele==ref_alt[1] and g2_allele==ref_alt[1]: # if they're the same BUT the site is  not monomorphic= hom alt
                    #   print('1 | 1', g1_allele, g2_allele)
-				phase_arr[g,i]='1|1'
+                phase_arr[g,i]='1|1'
 
-			if g1_allele==np.unique(g1[g,:])[0] and g2_allele==np.unique(g1[g,:])[1]:
+            elif g1_allele==ref_alt[0] and g2_allele==ref_alt[1]: #het
                       #  print('0 | 1', g1_allele, g2_allele)
-				phase_arr[g,i]='0|1'
+                phase_arr[g,i]='0|1'
 
-			if g1_allele==np.unique(g1[g,:])[1] and g2_allele==np.unique(g1[g,:])[0]:
+            elif g1_allele==ref_alt[1] and g2_allele==ref_alt[0]: #het
                       #  print('1 | 0', g1_allele, g2_allele)
-				phase_arr[g,i]='1|0'
+                phase_arr[g,i]='1|0'
 
-			if g1_allele==np.unique(g1[g,:])[1] and g2_allele==np.unique(g1[g,:])[1]:
+			#elif g1_allele==np.unique(np.concatenate((g1[g,:], g2[g,:])))[1] and g2_allele==np.unique(np.concatenate((g1[g,:], g2[g,:])))[1]:
                        # print('1 | 0', g1_allele, g2_allele)
-				phase_arr[g,i]='1|0'
+			#	phase_arr[g,i]='1|0'
 
 chr_ord=np.resize(range(1,23), len(usable_pos))# assigns a chr to each site
 
